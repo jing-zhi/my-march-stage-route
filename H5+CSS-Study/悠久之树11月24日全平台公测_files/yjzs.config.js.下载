@@ -1,0 +1,73 @@
+var $mngConfig = {
+  "game_base_id": 104921,
+  "pc": {
+    "host": "http://yjzs.biligame.com/",
+    "android_link": "",
+    "android_link2": "",
+    "big_link": "",
+    "big_link2": "",
+    "banners": [
+      {
+        "link": "https://www.biligame.com/detail/?id=104921",
+        "image": "//i2.hdslb.com/bfs/game/225959523cf93d5c2091d9edc5daa916073245b0.jpg"
+      }
+    ]
+  },
+  "h5": {
+    "host": "http://yjzs.biligame.com/",
+    "android_link": "",
+    "android_link2": "",
+    "big_link": "",
+    "big_link2": "",
+    "banners": [
+      {
+        "link": "https://www.biligame.com/detail/?id=104921",
+        "image": "//i1.hdslb.com/bfs/game/7b5a46d75e5eea477f7ac191c94776f3df8c618a.jpg"
+      }
+    ]
+  },
+  "extra": {
+    "pc_ios_url": "https://itunes.apple.com/cn/app/id1508302382",
+    "h5_ios_url": "https://itunes.apple.com/cn/app/id1508302382",
+    "qqList": [
+      {
+        "detail": "玩家1群：",
+        "num": "907659174"
+      },
+      {
+        "detail": "玩家2群：",
+        "num": "936940790"
+      },
+      {
+        "detail": "玩家3群：",
+        "num": "1141257635"
+      }
+    ],
+    "showH5FooterCondition": "function () { return window.location.search.indexOf('baidusem') >= 0; }"
+  }
+};
+$mngConfig.pc = $mngConfig.pc || {};
+$mngConfig.h5 = $mngConfig.h5 || {};
+var $config = {
+	pc: JSON.parse(JSON.stringify($mngConfig.pc)),
+	h5: JSON.parse(JSON.stringify($mngConfig.h5)),
+	pc_android_url: $mngConfig.pc.android_link,
+	pc_android_url_http: $mngConfig.pc.android_link2,
+	h5_android_url: $mngConfig.h5.android_link,
+	h5_android_url_http: $mngConfig.h5.android_link2,
+	pc_big_link: $mngConfig.pc.big_link,
+	pc_big_link2: $mngConfig.pc.big_link2,
+	h5_big_link: $mngConfig.h5.big_link,
+	h5_big_link2: $mngConfig.h5.big_link2,
+	app_id: $mngConfig.app_id,
+	game_base_id: $mngConfig.game_base_id,
+	biliapp_url: "bilibili://game_center/detail?id=" + $mngConfig.game_base_id + "&sourceType=outside&sourceFrom=1742"
+};
+if ($mngConfig.extra) {
+	var extra = JSON.parse(JSON.stringify($mngConfig.extra));
+	for (var k in extra) {
+		if (Object.prototype.hasOwnProperty.call(extra, k)) {
+			$config[k] = extra[k];
+		}
+	}
+}

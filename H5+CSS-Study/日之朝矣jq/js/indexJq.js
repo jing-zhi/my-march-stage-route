@@ -1,0 +1,494 @@
+// jQuery部分
+
+
+// function parseJson(json) {
+//     let myJson = "";
+//     $.each(json, function (key,value) {
+//         myJson += `<li class="animeRect">
+//                         <a href=${value.AnimeInfoSite} class="animeCover animeAnchor">
+//                             <img src=${value.ImgSite} alt='${value.Name}'>
+//                         </a>
+//                         <div class="animeInner">
+//                             <a href=${value.AnimeInfoSite} class="animeAnchor titleAnchor"><span class="animeTitle">${value.Name}</span></a>
+//                         </div>
+//                     </li>`
+//         let singleAnime = {
+//             Name:value.Name,
+//             ImgSite:value.ImgSite,
+//             AnimeInfoSite:value.AnimeInfoSite
+//         };
+//         singleAnime = JSON.stringify(singleAnime);
+//         localStorage.setItem(value.Name,singleAnime);
+//     });
+//     $(".animeUl").append(myJson);
+// }
+// $(function () {
+//     // 读取
+//     let myJson;
+//     $.getJSON(
+//         "./js/spiderData100.json",
+//         function (json) {
+//             parseJson(json);
+//             $(".animeRect").contextmenu(function (e) {
+//                 popUpContextMenu(e.clientX,e.clientY + scrollY,this);
+//             });   
+//         }
+//     );
+// })
+
+    
+
+
+
+//TODO 增 
+// 通过调用编辑窗口，在编辑窗口中判断进行添加
+$("#addAnimeRectButton").click(function addAnime(e) {
+    popUpAnimeEditBox(e.clientX,e.clientY + scrollY,this);
+});
+
+//TODO 删
+/*TODO
+    右击多个animeRectLi后，点一次删除，会删掉所有右击过的东西
+    问题出在每右击一次animeRectLi后，就会给其注册点击删除键就删除自己的事件
+    解决方法：在编辑框每被调用一次，就移除一次注册上的所有事件
+    同时也需要移除事件的是编辑框的保存按钮
+*/
+// 移除localstorage中的该项，该项过渡消失，定时器到时间后删掉改元素
+function deleteAnime(animeRectLi) {
+    localStorage.removeItem(`${animeRectLi.firstElementChild.firstElementChild.alt}`);
+    closeTransition(animeRectLi);
+    // console.log(animeRectLi);
+    setTimeout(()=>{animeRectLi.remove()},350);
+}
+
+//TODO 改
+// 这个只是填充编辑框中内容的方法，改功能在编辑框的保存按钮中
+/*
+    先判断调用者传入的参数是不是添加按钮
+    如果是就将input全部重置
+    如果不是，就将调用者传入的元素中对应的项填充到input中
+*/
+function fillInfo(animeRectLi) {
+    if(animeRectLi === $("#addAnimeRectButton")[0]){
+        $('#workurlAnime').val("");
+        $('#workpicurlAnime').val("");
+        $('#worktitleAnime').val("");
+    }else{
+        $('#workurlAnime').val($(animeRectLi).children('.animeCover').attr('href'));
+        $('#workpicurlAnime').val($(animeRectLi).find('img').attr('src'));
+        $('#worktitleAnime').val($(animeRectLi).find('span').text());
+    }
+}
+
+//TODO 查
+// 搜索按钮点击后，对ul进行遍历，并通过has()寻找指定子元素，没有的话隐藏该li
+$('#searchBut').on("click",function () {
+    $(".animeUl").contents().each(function (i) {
+        if($(this).has(`span:contains('${$("#searchInput").val()}')`)[0] == undefined){
+            closeTransition(this);
+        }else{
+            openTransition(this);
+        }
+        
+    })
+});
+$('#searchInput').keyup(function (event) {
+    if(event.keyCode === 13){
+        $('#searchBut').click();
+    }
+})
+
+// 编辑框
+// 弹出编辑框，并在编辑框中进行各种操作
+function popUpAnimeEditBox(x, y, animeRectLi) {
+    // 移除事件
+    $("#savebutAnime").unbind("click");
+
+    // 定位
+    $("#editorPop").css({
+        "left": x + "px",
+        "top": y - 185 + 'px'
+    });
+
+    // 过渡效果
+    openTransition("#editorPop");
+
+    // 填充编辑框
+    fillInfo(animeRectLi);
+
+    // 保存更改
+    $("#savebutAnime").click(function () {
+        let singleAnime = {
+            Name:$('#worktitleAnime').val(),
+            ImgSite:$('#workpicurlAnime').val(),
+            AnimeInfoSite:$('#workurlAnime').val()
+        };
+
+        /*
+            通过判断animeRectLi参数，从而确定是否是添加按钮调用的该方法
+            如果是的话，通过字符串模板与append()方法来创建元素，
+            并给其添加右击事件
+        */ 
+        if(animeRectLi === $("#addAnimeRectButton")[0]){
+            let newAnime = `<li class="animeRect">
+                        <a href=${singleAnime.AnimeInfoSite} class="animeCover animeAnchor">
+                            <img src=${singleAnime.ImgSite} alt='${singleAnime.Name}'>
+                        </a>
+                        <div class="animeInner">
+                            <a href=${singleAnime.AnimeInfoSite} class="animeAnchor titleAnchor"><span class="animeTitle">${singleAnime.Name}</span></a>
+                        </div>
+                    </li>`;
+            $(".animeUl").append(newAnime);
+            animeRectLi = $(".animeUl li:last-child");
+            $(animeRectLi).contextmenu(function (e) {
+                popUpContextMenu(e.clientX,e.clientY + scrollY,this);
+            });
+        }
+        /*
+            先移除名称对应的键值对，
+            然后对li中的文本进行更改
+            将singleAnime转化为JSON字符串，保存在localStorage中
+            最后关闭编辑窗口
+        */
+        localStorage.removeItem($(animeRectLi).find('span').text());
+        $(animeRectLi).find('span').text(singleAnime.Name);
+        $(animeRectLi).find('img').attr('src',singleAnime.ImgSite);
+        $(animeRectLi).children('.animeCover').attr('href',singleAnime.AnimeInfoSite);
+        singleAnime = JSON.stringify(singleAnime);
+        localStorage.setItem($('#worktitleAnime').val(),singleAnime);
+        closeTransition("#editorPop");
+    });
+
+    // 关闭编辑框
+    $("#editcloseAnime").click(function () {
+        closeTransition("#editorPop");
+    });
+
+};
+
+
+// 弹出右键菜单框
+function popUpContextMenu(x, y, animeRectLi) {
+    // 移除编辑按钮和删除按钮上的所有事件
+    $("#delworklistAnime").unbind("click");
+    $("#editworklistAnime").unbind("click");
+    
+    // 设置弹出位置
+    $("#workRightClickAnime").css({
+        "left": x+"px",
+        "top": y + 'px'
+    });
+    openTransition("#workRightClickAnime");
+
+    // 弹出编辑框
+    $("#editworklistAnime").click(function () {
+        closeTransition("#workRightClickAnime");
+        popUpAnimeEditBox(x,y,animeRectLi);
+    });
+    
+    // 删除
+    $("#delworklistAnime").click(function () {
+        deleteAnime(animeRectLi);
+        closeTransition("#workRightClickAnime");
+    })
+}
+
+// 窗口弹出过渡效果
+function openTransition(popupName) {
+    $(popupName).css({"transition":".25s cubic-bezier(0.65, 0.05, 0.1, 1)","display":"block"});
+    setTimeout(() => {
+        $(popupName).css({"opacity":"1","transform":"scale(1.05)"});
+    },100);
+    setTimeout(() => {
+        $(popupName).css("transform","scale(1)");
+    },50);
+}
+
+// 窗口关闭过渡效果
+function closeTransition(popupName) {
+    $(popupName).css({"transform":"scale(0.5)","opacity":"0"});
+    setTimeout(() => {
+        $(popupName).css("display","none");
+    },150);
+}
+
+// 点击其它位置关闭右键菜单
+window.onclick = function (e) {
+    closeTransition($("#workRightClickAnime"));
+}
+
+// 用于初始化一些动漫，数据来源是爬虫
+let myAnimeJson = [
+    {"field1":"0","Rank":"1","AnimeInfoSite":"\"https://bangumi.tv/subject/253\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/c2/4c/253_t3XWb.jpg\"","Name":"\"星际牛仔\"","OrgName":"\"カウボーイビバップ\"","rating":"9.1","judge":"8429","info":"\"26话 /  1998年10月23日 / 渡辺信一郎 / 矢立肇 / 川元利浩\""}
+    ,
+    {"field1":"1","Rank":"2","AnimeInfoSite":"\"https://bangumi.tv/subject/326\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/a6/66/326_M9f1M.jpg\"","Name":"\"攻壳机动队 S.A.C. 2nd GIG\"","OrgName":"\"攻殻機動隊 S.A.C. 2nd GIG\"","rating":"9.1","judge":"4637","info":"\"26话 /  2004年1月1日 / 神山健治 / 士郎正宗\""}
+    ,
+    {"field1":"2","Rank":"3","AnimeInfoSite":"\"https://bangumi.tv/subject/324\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/f2/fc/324_psuXk.jpg\"","Name":"\"攻壳机动队 STAND ALONE COMPLEX\"","OrgName":"\"攻殻機動隊 STAND ALONE COMPLEX\"","rating":"9.1","judge":"5680","info":"\"26话 /  2002年10月1日 / 神山健治 / 士郎正宗 / 下村一\""}
+    ,
+    {"field1":"3","Rank":"4","AnimeInfoSite":"\"https://bangumi.tv/subject/876\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/67/d1/876_dCfrd.jpg\"","Name":"\"CLANNAD ～AFTER STORY～\"","OrgName":"\"CLANNAD ～AFTER STORY～\"","rating":"9.0","judge":"12920","info":"\"24话 /  2008年10月2日 / 石原立也 / Key/Visual Art's / 池田和美\""}
+    ,
+    {"field1":"4","Rank":"5","AnimeInfoSite":"\"https://bangumi.tv/subject/237\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/53/9f/237_a8aEP.jpg\"","Name":"\"攻壳机动队\"","OrgName":"\"GHOST IN THE SHELL / 攻殻機動隊\"","rating":"8.9","judge":"4893","info":"\"1话 /  1995年11月18日 / 押井守 / 士郎正宗 / 沖浦啓之\""}
+    ,
+    {"field1":"5","Rank":"6","AnimeInfoSite":"\"https://bangumi.tv/subject/265\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/e5/69/265_Z5Uou.jpg\"","Name":"\"新世纪福音战士\"","OrgName":"\"新世紀エヴァンゲリオン\"","rating":"8.9","judge":"14385","info":"\"26话 /  1995年10月4日 / 庵野秀明 / GAINAX / 貞本義行\""}
+    ,
+    {"field1":"6","Rank":"7","AnimeInfoSite":"\"https://bangumi.tv/subject/6049\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/fe/45/6049_tbM7S.jpg\"","Name":"\"新世纪福音战士剧场版 Air/真心为你\"","OrgName":"\"新世紀エヴァンゲリオン劇場版 Air/まごころを、君に\"","rating":"8.9","judge":"7507","info":"\"2话 /  1997年7月19日\""}
+    ,
+    {"field1":"7","Rank":"8","AnimeInfoSite":"\"https://bangumi.tv/subject/1728\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/71/37/1728_HLsCr.jpg\"","Name":"\"浪客剑心 追忆篇\"","OrgName":"\"るろうに剣心 -明治剣客浪漫譚- 追憶編\"","rating":"8.9","judge":"3958","info":"\"4话 /  1999年2月20日 / 古橋一浩 / 和月伸宏 / 柳沢まさひで\""}
+    ,
+    {"field1":"8","Rank":"9","AnimeInfoSite":"\"https://bangumi.tv/subject/25961\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/fd/60/25961_WDKz6.jpg\"","Name":"\"猫和老鼠\"","OrgName":"\"Tom and Jerry\"","rating":"8.8","judge":"4402","info":"\"161话 /  1940年2月10日 / William Hanna (1940–58) Joseph Barbera (1940–58 / 2005) Gene Deitch (1961–62) Chuck Jones (1963–67) Maurice Noble (1964–67) Abe Levitow (1965–67) Tom Ray (1966–67) Ben Washam (1966–67)\""}
+    ,
+    {"field1":"9","Rank":"10","AnimeInfoSite":"\"https://bangumi.tv/subject/1428\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/06/63/1428_xwkMI.jpg\"","Name":"\"钢之炼金术师 FULLMETAL ALCHEMIST\"","OrgName":"\"鋼の錬金術師 FULLMETAL ALCHEMIST\"","rating":"8.8","judge":"11615","info":"\"64话 /  2009年4月5日 / 入江泰浩 / 荒川弘（掲載 月刊『少年ガンガン』スクウェア・エニックス刊） / 菅野宏紀\""}
+    ,
+    {"field1":"10","Rank":"11","AnimeInfoSite":"\"https://bangumi.tv/subject/211567\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/5c/49/211567_pGm5Q.jpg\"","Name":"\"3月的狮子 第二季\"","OrgName":"\"3月のライオン 第2シリーズ\"","rating":"8.8","judge":"3896","info":"\"22话 /  2017年10月14日 / 新房昭之 / 羽海野チカ（白泉社 ヤングアニマル連載） / 杉山延寛\""}
+    ,
+    {"field1":"11","Rank":"12","AnimeInfoSite":"\"https://bangumi.tv/subject/110467\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/73/26/110467_Fx9tT.jpg\"","Name":"\"白箱\"","OrgName":"\"SHIROBAKO\"","rating":"8.8","judge":"10141","info":"\"24话 /  2014年10月9日 / 水島努 / 武蔵野アニメーション / 関口可奈味\""}
+    ,
+    {"field1":"12","Rank":"13","AnimeInfoSite":"\"https://bangumi.tv/subject/2907\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/c7/55/2907_3iLtK.jpg\"","Name":"\"银河英雄传说\"","OrgName":"\"銀河英雄伝説\"","rating":"8.8","judge":"1313","info":"\"110话 /  1988年1月8日 / 田中芳樹 / 本木久年(1期)、久米一成(2期)、清水恵蔵(3期～)\""}
+    ,
+    {"field1":"13","Rank":"14","AnimeInfoSite":"\"https://bangumi.tv/subject/11834\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/e1/36/11834_F225g.jpg\"","Name":"\"银魂'\"","OrgName":"\"銀魂'\"","rating":"8.8","judge":"8270","info":"\"51话 /  2011年4月4日\""}
+    ,
+    {"field1":"14","Rank":"15","AnimeInfoSite":"\"https://bangumi.tv/subject/1608\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/fa/af/1608_3I59P.jpg\"","Name":"\"灌篮高手\"","OrgName":"\"スラムダンク\"","rating":"8.8","judge":"6057","info":"\"101话 /  1993年10月16日 / 井上雄彦\""}
+    ,
+    {"field1":"15","Rank":"16","AnimeInfoSite":"\"https://bangumi.tv/subject/247\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/3c/ec/247_MnPPU.jpg\"","Name":"\"银魂\"","OrgName":"\"銀魂\"","rating":"8.7","judge":"7805","info":"\"201话 /  2006年4月4日 / 高松信司 / 空知英秋 / 竹内進二\""}
+    ,
+    {"field1":"16","Rank":"17","AnimeInfoSite":"\"https://bangumi.tv/subject/340\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/40/00/340_J14Mj.jpg\"","Name":"\"虫师\"","OrgName":"\"蟲師\"","rating":"8.7","judge":"6709","info":"\"26话 /  2005年10月22日 / 長濵博史 / 漆原友紀 / 馬越嘉彦\""}
+    ,
+    {"field1":"17","Rank":"18","AnimeInfoSite":"\"https://bangumi.tv/subject/238\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/ac/1d/238_8OzU0.jpg\"","Name":"\"攻壳机动队2 无罪\"","OrgName":"\"イノセンス\"","rating":"8.7","judge":"3657","info":"\"1话 /  2004年3月6日 / 押井守\""}
+    ,
+    {"field1":"18","Rank":"19","AnimeInfoSite":"\"https://bangumi.tv/subject/839\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/8f/7d/839_0uIrU.jpg\"","Name":"\"蓝色恐惧\"","OrgName":"\"PERFECT BLUE\"","rating":"8.7","judge":"4150","info":"\"1话 /  1998年2月28日 / 今敏 / 竹内義和\""}
+    ,
+    {"field1":"19","Rank":"20","AnimeInfoSite":"\"https://bangumi.tv/subject/263750\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/c2/56/263750_56TBs.jpg\"","Name":"\"进击的巨人 第三季 Part.2\"","OrgName":"\"進撃の巨人 Season 3 Part.2\"","rating":"8.6","judge":"5933","info":"\"10话 /  2019年4月28日 / 諫山創（別冊少年マガジン連載／講談社）\""}
+    ,
+    {"field1":"20","Rank":"21","AnimeInfoSite":"\"https://bangumi.tv/subject/3375\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/9b/9b/3375_33BCV.jpg\"","Name":"\"凉宫春日的消失\"","OrgName":"\"涼宮ハルヒの消失\"","rating":"8.6","judge":"10795","info":"\"1话 /  2010年2月6日 / 武本康弘 / 谷川流 / 池田晶子\""}
+    ,
+    {"field1":"21","Rank":"22","AnimeInfoSite":"\"https://bangumi.tv/subject/321\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/ca/f1/321_Awr1p.jpg\"","Name":"\"机动警察 和平保卫战\"","OrgName":"\"機動警察パトレイバー 2 the Movie\"","rating":"8.7","judge":"1279","info":"\"1话 /  1993年8月7日 / 押井守\""}
+    ,
+    {"field1":"22","Rank":"23","AnimeInfoSite":"\"https://bangumi.tv/subject/3302\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/6f/ab/3302_rEfZV.jpg\"","Name":"\"福音战士新剧场版：破\"","OrgName":"\"ヱヴァンゲリヲン新劇場版:破\"","rating":"8.6","judge":"7624","info":"\"1话 /  2009年6月27日\""}
+    ,
+    {"field1":"23","Rank":"24","AnimeInfoSite":"\"https://bangumi.tv/subject/840\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/fa/83/840_JRk3Z.jpg\"","Name":"\"千年女优\"","OrgName":"\"千年女優\"","rating":"8.6","judge":"5359","info":"\"1话 /  2001年7月28日 (Fantasia International Film Festival)、2002年9月14日 (日本) / 今敏 / 本田雄、今敏\""}
+    ,
+    {"field1":"24","Rank":"25","AnimeInfoSite":"\"https://bangumi.tv/subject/770\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/4e/a0/770_EvrMq.jpg\"","Name":"\"天元突破 红莲螺岩\"","OrgName":"\"天元突破グレンラガン\"","rating":"8.6","judge":"6932","info":"\"27话 /  2007年4月1日 / 今石洋之 / GAINAX / 錦織敦史\""}
+    ,
+    {"field1":"25","Rank":"26","AnimeInfoSite":"\"https://bangumi.tv/subject/10380\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/a9/79/10380_YwP4R.jpg\"","Name":"\"命运石之门\"","OrgName":"\"STEINS;GATE\"","rating":"8.6","judge":"15685","info":"\"25话 /  2011年4月6日 / 佐藤卓哉、浜崎博嗣、小林智樹(第25話) / 5pb./Nitro+ / 坂井久太\""}
+    ,
+    {"field1":"26","Rank":"27","AnimeInfoSite":"\"https://bangumi.tv/subject/146457\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/c0/a7/146457_G7nNG.jpg\"","Name":"\"瑞克和莫蒂 第三季\"","OrgName":"\"Rick and Morty Season 3\"","rating":"8.6","judge":"1598","info":"\"10话 /  2017-04-01 / Justin Roiland、Dan Harmon\""}
+    ,
+    {"field1":"27","Rank":"28","AnimeInfoSite":"\"https://bangumi.tv/subject/311\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/9d/fc/311_GAg3x.jpg\"","Name":"\"千与千寻\"","OrgName":"\"千と千尋の神隠し\"","rating":"8.6","judge":"10913","info":"\"1话 /  2001年7月20日 / 宮崎駿\""}
+    ,
+    {"field1":"28","Rank":"29","AnimeInfoSite":"\"https://bangumi.tv/subject/1270\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/c8/50/1270_Yo7p2.jpg\"","Name":"\"水星领航员 第三季\"","OrgName":"\"ARIA The ORIGINATION\"","rating":"8.6","judge":"1476","info":"\"14话 /  2008年1月7日 / 佐藤順一 / 天野こずえ / 古賀誠\""}
+    ,
+    {"field1":"29","Rank":"30","AnimeInfoSite":"\"https://bangumi.tv/subject/1962\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/95/f6/1962_Z1r59.jpg\"","Name":"\"大闹天宫\"","OrgName":"\"大闹天宫\"","rating":"8.6","judge":"2673","info":"\"1话 /  1961年 / 万籁鸣 / 吴承恩\""}
+    ,
+    {"field1":"30","Rank":"31","AnimeInfoSite":"\"https://bangumi.tv/subject/141530\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/63/28/141530_LTrtw.jpg\"","Name":"\"瑞克和莫蒂 第二季\"","OrgName":"\"Rick and Morty Season 2\"","rating":"8.6","judge":"1605","info":"\"10话 /  2015-07-26 / Justin Roiland、Dan Harmon\""}
+    ,
+    {"field1":"31","Rank":"32","AnimeInfoSite":"\"https://bangumi.tv/subject/254\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/c5/2f/254_PLvyV.jpg\"","Name":"\"混沌武士\"","OrgName":"\"サムライチャンプルー\"","rating":"8.5","judge":"4789","info":"\"26话 /  2004年5月19日 / 渡辺信一郎 / Manglobe / 中澤一登\""}
+    ,
+    {"field1":"32","Rank":"33","AnimeInfoSite":"\"https://bangumi.tv/subject/106207\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/9c/c7/106207_z8288.jpg\"","Name":"\"虫师 续章 第2期\"","OrgName":"\"蟲師 続章 第2クール\"","rating":"8.5","judge":"2153","info":"\"10话 /  2014年10月18日 / 長濵博史 / 漆原友紀 / 馬越嘉彦\""}
+    ,
+    {"field1":"33","Rank":"34","AnimeInfoSite":"\"https://bangumi.tv/subject/92705\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/a6/33/92705_P0yq4.jpg\"","Name":"\"虫师 续章\"","OrgName":"\"蟲師 続章\"","rating":"8.5","judge":"2631","info":"\"11话 /  2014年4月4日 / 長濵博史 / 漆原友紀 / 馬越嘉彦\""}
+    ,
+    {"field1":"34","Rank":"35","AnimeInfoSite":"\"https://bangumi.tv/subject/315574\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/1c/6b/315574_7778r.jpg\"","Name":"\"赛马娘 Pretty Derby 第二季\"","OrgName":"\"ウマ娘 プリティーダービー Season 2\"","rating":"8.5","judge":"2477","info":"\"13话 /  2021年1月4日 / 及川啓 / Cygames / 椛島洋介、辻智子\""}
+    ,
+    {"field1":"35","Rank":"36","AnimeInfoSite":"\"https://bangumi.tv/subject/848\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/36/2e/848_RC9L8.jpg\"","Name":"\"蜂蜜与四叶草II\"","OrgName":"\"ハチミツとクローバー II\"","rating":"8.5","judge":"2760","info":"\"12话 /  2006年6月29日 / 長井龍雪 / 羽海野チカ / 島村秀一\""}
+    ,
+    {"field1":"36","Rank":"37","AnimeInfoSite":"\"https://bangumi.tv/subject/1015\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/29/89/1015_Z2xoh.jpg\"","Name":"\"机动战士高达0080 口袋里的战争\"","OrgName":"\"機動戦士ガンダム0080 ポケットの中の戦争\"","rating":"8.5","judge":"2175","info":"\"6话 /  1989年3月25日 / 高山文彦 / 矢立肇、富野由悠季 / 美樹本晴彦\""}
+    ,
+    {"field1":"37","Rank":"38","AnimeInfoSite":"\"https://bangumi.tv/subject/93377\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/db/e4/93377_QT4tY.jpg\"","Name":"\"瑞克和莫蒂 第一季\"","OrgName":"\"Rick and Morty Season 1\"","rating":"8.5","judge":"1857","info":"\"11话 /  2013-12-02 / Justin Roiland、Dan Harmon\""}
+    ,
+    {"field1":"38","Rank":"39","AnimeInfoSite":"\"https://bangumi.tv/subject/298\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/26/e3/298_l62bL.jpg\"","Name":"\"天空之城\"","OrgName":"\"天空の城ラピュタ\"","rating":"8.5","judge":"6437","info":"\"1话 /  1986年8月2日 / 宮崎駿\""}
+    ,
+    {"field1":"39","Rank":"40","AnimeInfoSite":"\"https://bangumi.tv/subject/9622\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/97/c8/9622_3I0Cc.jpg\"","Name":"\"机动战士Z高达\"","OrgName":"\"機動戦士Ζガンダム\"","rating":"8.5","judge":"1721","info":"\"50话 /  1985年3月2日 / 矢立肇 / 安彦良和\""}
+    ,
+    {"field1":"40","Rank":"41","AnimeInfoSite":"\"https://bangumi.tv/subject/4019\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/7f/c6/4019_f34f4.jpg\"","Name":"\"四叠半神话大系\"","OrgName":"\"四畳半神話大系\"","rating":"8.5","judge":"6148","info":"\"11话 /  2010年4月22日 / 湯浅政明 / 森見登美彦 / 伊東伸高\""}
+    ,
+    {"field1":"41","Rank":"42","AnimeInfoSite":"\"https://bangumi.tv/subject/9717\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/cb/57/9717_sAVag.jpg\"","Name":"\"魔法少女小圆\"","OrgName":"\"魔法少女まどか☆マギカ\"","rating":"8.5","judge":"16142","info":"\"12话 /  2011年1月7日 / 新房昭之 / Magica Quartet / 岸田隆宏\""}
+    ,
+    {"field1":"42","Rank":"43","AnimeInfoSite":"\"https://bangumi.tv/subject/847\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/f4/55/847_xHHqh.jpg\"","Name":"\"蜂蜜与四叶草\"","OrgName":"\"ハチミツとクローバー\"","rating":"8.5","judge":"3740","info":"\"24话 /  2005年4月14日 / カサヰケンイチ / 羽海野チカ / 島村秀一\""}
+    ,
+    {"field1":"43","Rank":"44","AnimeInfoSite":"\"https://bangumi.tv/subject/173849\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/1c/c6/173849_R21bS.jpg\"","Name":"\"排球少年 乌野高校 VS 白鸟泽学园高校\"","OrgName":"\"ハイキュー!! 烏野高校 VS 白鳥沢学園高校\"","rating":"8.5","judge":"2542","info":"\"10话 /  2016年10月7日 / 満仲勧 / 古舘春一（集英社「週刊少年ジャンプ」連載）\""}
+    ,
+    {"field1":"44","Rank":"45","AnimeInfoSite":"\"https://bangumi.tv/subject/10291\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/ef/18/10291_8qt9P.jpg\"","Name":"\"攻壳机动队2.0\"","OrgName":"\"GHOST IN THE SHELL / 攻殻機動隊2.0\"","rating":"8.5","judge":"1854","info":"\"1话 /  2008年7月12日 / 押井守\""}
+    ,
+    {"field1":"45","Rank":"46","AnimeInfoSite":"\"https://bangumi.tv/subject/841\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/02/a3/841_P6wS5.jpg\"","Name":"\"红辣椒\"","OrgName":"\"パプリカ\"","rating":"8.4","judge":"5298","info":"\"1话 /  2006年11月25日 / 今敏 / 筒井康隆\""}
+    ,
+    {"field1":"46","Rank":"47","AnimeInfoSite":"\"https://bangumi.tv/subject/216371\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/1d/35/216371_5926R.jpg\"","Name":"\"莉兹与青鸟\"","OrgName":"\"リズと青い鳥\"","rating":"8.4","judge":"5425","info":"\"1话 /  2018年4月21日 / 山田尚子 / 武田綾乃（宝島社文庫「響け！ユーフォニアム 北宇治高校吹奏楽部、波乱の第二楽章」） / 西屋太志\""}
+    ,
+    {"field1":"47","Rank":"48","AnimeInfoSite":"\"https://bangumi.tv/subject/975\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/92/97/975_YKuWd.jpg\"","Name":"\"海贼王\"","OrgName":"\"ONE PIECE\"","rating":"8.4","judge":"7195","info":"\"1999年10月20日 / 宇田鋼之介（1-278）、志水淳児（131-159）→境宗久（244-372）→宮元宏彰（352-679）→深澤敏則（663-891）、伊藤聡伺（780-782）→長峯達也（780-782、892-）、暮田公平、小牧文（892-） / 尾田栄一郎（集英社「週刊少年ジャンプ」連載） / 小泉昇（1-425）→久田和也（385-891）→松田翠（780-782、892-）\""}
+    ,
+    {"field1":"48","Rank":"49","AnimeInfoSite":"\"https://bangumi.tv/subject/93739\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/1e/63/93739_TZ9dS.jpg\"","Name":"\"乒乓\"","OrgName":"\"ピンポン THE ANIMATION\"","rating":"8.4","judge":"5870","info":"\"11话 /  2014年4月10日\""}
+    ,
+    {"field1":"49","Rank":"50","AnimeInfoSite":"\"https://bangumi.tv/subject/37460\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/64/b3/37460_ncW1n.jpg\"","Name":"\"哆啦A梦 大山版\"","OrgName":"\"ドラえもん\"","rating":"8.5","judge":"963","info":"\"1787话 /  1979年4月2日\""}
+    ,
+    {"field1":"50","Rank":"51","AnimeInfoSite":"\"https://bangumi.tv/subject/39923\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/f5/a0/39923_8rQGb.jpg\"","Name":"\"新世纪福音战士剧场版 DEATH(TRUE)2/Air/真心为你\"","OrgName":"\"REVIVAL OF EVANGELION 新世紀エヴァンゲリオン劇場版 DEATH (TRUE)² / Air / まごころを、君に\"","rating":"8.4","judge":"3113","info":"\"3话 /  1998年3月7日 / 庵野秀明\""}
+    ,
+    {"field1":"51","Rank":"52","AnimeInfoSite":"\"https://bangumi.tv/subject/1773\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/4a/be/1773_rldoC.jpg\"","Name":"\"死亡笔记\"","OrgName":"\"DEATH NOTE\"","rating":"8.4","judge":"9107","info":"\"37话 /  2006年10月4日 / 荒木哲郎 / 大場つぐみ、小畑健 / 北尾勝\""}
+    ,
+    {"field1":"52","Rank":"53","AnimeInfoSite":"\"https://bangumi.tv/subject/1453\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/53/6a/1453_iZIOZ.jpg\"","Name":"\"少女革命\"","OrgName":"\"少女革命ウテナ\"","rating":"8.4","judge":"2343","info":"\"39话 /  1997年4月2日 / 幾原邦彦 / ビーパパス / 長谷川眞也\""}
+    ,
+    {"field1":"53","Rank":"54","AnimeInfoSite":"\"https://bangumi.tv/subject/310\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/06/eb/310_C0oq0.jpg\"","Name":"\"幽灵公主\"","OrgName":"\"もののけ姫\"","rating":"8.4","judge":"5070","info":"\"1话 /  1997年7月12日 / 宮崎駿\""}
+    ,
+    {"field1":"54","Rank":"55","AnimeInfoSite":"\"https://bangumi.tv/subject/1333\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/ff/49/1333_b2F18.jpg\"","Name":"\"剧场版 空之境界 第五章 矛盾螺旋\"","OrgName":"\"劇場版 空の境界 第五章 矛盾螺旋\"","rating":"8.4","judge":"6419","info":"\"1话 /  2008年8月16日 / 平尾隆之 / 奈須きのこ / 須藤友徳、高橋タクロヲ\""}
+    ,
+    {"field1":"55","Rank":"56","AnimeInfoSite":"\"https://bangumi.tv/subject/4583\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/33/80/4583_o56Py.jpg\"","Name":"\"机动战士高达 逆袭的夏亚\"","OrgName":"\"機動戦士ガンダム 逆襲のシャア\"","rating":"8.4","judge":"1550","info":"\"1话 /  1988年3月12日 / 富野由悠季 / 北爪宏幸\""}
+    ,
+    {"field1":"56","Rank":"57","AnimeInfoSite":"\"https://bangumi.tv/subject/51\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/28/38/51_z0Ly8.jpg\"","Name":"\"CLANNAD\"","OrgName":"\"CLANNAD -クラナド-\"","rating":"8.4","judge":"11802","info":"\"23话 /  2007年10月4日 / 石原立也 / Key/Visual Art's / 池田和美\""}
+    ,
+    {"field1":"57","Rank":"58","AnimeInfoSite":"\"https://bangumi.tv/subject/124341\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/10/a1/124341_5oSro.jpg\"","Name":"\"水星领航员 The AVVENIRE\"","OrgName":"\"ARIA The AVVENIRE\"","rating":"8.4","judge":"799","info":"\"3话 /  2015年9月26日 / 佐藤順一 / 天野こずえ / 音地正行\""}
+    ,
+    {"field1":"58","Rank":"59","AnimeInfoSite":"\"https://bangumi.tv/subject/320\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/32/07/320_IyhUt.jpg\"","Name":"\"攻壳机动队 S.A.C. Solid State Society\"","OrgName":"\"攻殻機動隊 STAND ALONE COMPLEX Solid State Society\"","rating":"8.4","judge":"2055","info":"\"1话 /  2006年11月24日 / 神山健治 / 士郎正宗 / りぱ、後藤隆幸、西尾鉄也\""}
+    ,
+    {"field1":"59","Rank":"60","AnimeInfoSite":"\"https://bangumi.tv/subject/72266\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/76/f3/72266_p0Nxo.jpg\"","Name":"\"少女与战车 剧场版\"","OrgName":"\"ガールズ&amp;パンツァー 劇場版\"","rating":"8.4","judge":"3881","info":"\"1话 /  2015年11月21日 / 水島努 / 杉本功\""}
+    ,
+    {"field1":"60","Rank":"61","AnimeInfoSite":"\"https://bangumi.tv/subject/120236\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/04/3d/120236_AffBR.jpg\"","Name":"\"排球少年 第二季\"","OrgName":"\"ハイキュー!! セカンドシーズン\"","rating":"8.4","judge":"2771","info":"\"25话 /  2015年10月3日 / 古舘春一（集英社「週刊少年ジャンプ」連載）\""}
+    ,
+    {"field1":"61","Rank":"62","AnimeInfoSite":"\"https://bangumi.tv/subject/9912\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/0e/14/9912_LZML8.jpg\"","Name":"\"日常\"","OrgName":"\"日常\"","rating":"8.4","judge":"10771","info":"\"26话 /  2011年4月2日 / 石原立也 / あらゐけいいち / 西屋太志\""}
+    ,
+    {"field1":"62","Rank":"63","AnimeInfoSite":"\"https://bangumi.tv/subject/262897\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/0f/50/262897_d3555.jpg\"","Name":"\"摇曳露营△ 第二季\"","OrgName":"\"ゆるキャン△ SEASON 2\"","rating":"8.4","judge":"2678","info":"\"13话 /  2021年1月7日 / 京極義昭 / あfろ（芳文社「COMIC FUZ」掲載） / 佐々木睦美\""}
+    ,
+    {"field1":"63","Rank":"64","AnimeInfoSite":"\"https://bangumi.tv/subject/176615\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/d2/ab/176615_W4d9D.jpg\"","Name":"\"昭和元禄落语心中 -助六再临篇-\"","OrgName":"\"昭和元禄落語心中 -助六再び篇-\"","rating":"8.4","judge":"1376","info":"\"12话 /  2017年1月6日 / 畠山守（小俣真一） / 雲田はるこ（講談社「ITAN」連載） / 細居美恵子\""}
+    ,
+    {"field1":"64","Rank":"65","AnimeInfoSite":"\"https://bangumi.tv/subject/44693\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/31/1c/44693_YS9kU.jpg\"","Name":"\"剧场版 魔法少女小圆 [新篇] 叛逆的物语\"","OrgName":"\"劇場版 魔法少女まどか☆マギカ [新編] 叛逆の物語\"","rating":"8.3","judge":"6267","info":"\"1话 /  2013年10月26日 / 宮本幸裕 / Magica Quartet / 岸田隆宏、谷口淳一郎\""}
+    ,
+    {"field1":"65","Rank":"66","AnimeInfoSite":"\"https://bangumi.tv/subject/1704\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/a5/88/1704_kwXKE.jpg\"","Name":"\"猎人\"","OrgName":"\"HUNTER×HUNTER\"","rating":"8.3","judge":"2864","info":"\"62话 /  1999年10月16日 / 古橋一浩 / 冨樫義博\""}
+    ,
+    {"field1":"66","Rank":"67","AnimeInfoSite":"\"https://bangumi.tv/subject/67753\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/e5/34/67753_YpEae.jpg\"","Name":"\"明日之丈2\"","OrgName":"\"あしたのジョー2\"","rating":"9.1","judge":"79","info":"\"47话 /  1980年10月13日\""}
+    ,
+    {"field1":"67","Rank":"68","AnimeInfoSite":"\"https://bangumi.tv/subject/295\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/49/18/295_W0vZv.jpg\"","Name":"\"风之谷\"","OrgName":"\"風の谷のナウシカ\"","rating":"8.3","judge":"4297","info":"\"1话 /  1984-03-11 / 宮崎駿\""}
+    ,
+    {"field1":"68","Rank":"69","AnimeInfoSite":"\"https://bangumi.tv/subject/4163\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/60/49/4163_E22Se.jpg\"","Name":"\"百变之星\"","OrgName":"\"カレイドスター\"","rating":"8.4","judge":"977","info":"\"51话 /  2003年4月3日 / 佐藤順一、平池芳正（第27话以后）\""}
+    ,
+    {"field1":"69","Rank":"70","AnimeInfoSite":"\"https://bangumi.tv/subject/1959\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/e4/dd/1959_004b0.jpg\"","Name":"\"怪物\"","OrgName":"\"MONSTER\"","rating":"8.3","judge":"2047","info":"\"74话 /  2004年4月6日\""}
+    ,
+    {"field1":"70","Rank":"71","AnimeInfoSite":"\"https://bangumi.tv/subject/113292\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/1b/e9/113292_z4z21.jpg\"","Name":"\"JOJO的奇妙冒险 星尘斗士 埃及篇\"","OrgName":"\"ジョジョの奇妙な冒険 スターダストクルセイダース エジプト編\"","rating":"8.3","judge":"5227","info":"\"24话 /  2015年1月9日 / 津田尚克 / 荒木飛呂彦（集英社ジャンプ コミックス刊） / 小美野雅彦、町田真一（副人物设定、替身设计）、光田史亮（替身设计）\""}
+    ,
+    {"field1":"71","Rank":"72","AnimeInfoSite":"\"https://bangumi.tv/subject/793\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/da/8c/793_3y432.jpg\"","Name":"\"Code Geass 反叛的鲁路修\"","OrgName":"\"コードギアス 反逆のルルーシュ\"","rating":"8.3","judge":"10527","info":"\"25话 /  2006年10月5日 / 谷口悟朗 / 木村貴宏\""}
+    ,
+    {"field1":"72","Rank":"73","AnimeInfoSite":"\"https://bangumi.tv/subject/315\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/ad/13/315_Z84F1.jpg\"","Name":"\"钢之炼金术师\"","OrgName":"\"鋼の錬金術師\"","rating":"8.3","judge":"5935","info":"\"51话 /  2003年10月4日 / 水島精二 / 荒川弘 / 伊藤嘉之\""}
+    ,
+    {"field1":"73","Rank":"74","AnimeInfoSite":"\"https://bangumi.tv/subject/2741\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/cd/cb/2741_q4C0T.jpg\"","Name":"\"棒球英豪\"","OrgName":"\"タッチ\"","rating":"8.3","judge":"1335","info":"\"101话 /  1985年3月24日 / あだち充\""}
+    ,
+    {"field1":"74","Rank":"75","AnimeInfoSite":"\"https://bangumi.tv/subject/822\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/af/da/822_9y55j.jpg\"","Name":"\"FLCL\"","OrgName":"\"フリクリ\"","rating":"8.3","judge":"3965","info":"\"6话 /  2000年4月26日 / 鶴巻和哉 / GAINAX / 貞本義行\""}
+    ,
+    {"field1":"75","Rank":"76","AnimeInfoSite":"\"https://bangumi.tv/subject/3128\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/df/f8/3128_4QNAH.jpg\"","Name":"\"数码兽大冒险\"","OrgName":"\"デジモンアドベンチャー\"","rating":"8.3","judge":"4840","info":"\"54话 /  1999-03-07 / 中鶴勝祥\""}
+    ,
+    {"field1":"76","Rank":"77","AnimeInfoSite":"\"https://bangumi.tv/subject/246001\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/ae/c8/246001_RmCfM.jpg\"","Name":"\"我的三体 章北海传\"","OrgName":"\"我的三体 章北海传\"","rating":"8.3","judge":"998","info":"\"9话 /  2020年1月21日 / 神游八方（李圳宜） / 刘慈欣\""}
+    ,
+    {"field1":"77","Rank":"78","AnimeInfoSite":"\"https://bangumi.tv/subject/47576\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/5a/dc/47576_5gU11.jpg\"","Name":"\"银魂' 延长战\"","OrgName":"\"銀魂' 延長戦\"","rating":"8.3","judge":"2725","info":"\"13话 /  2012年10月4日\""}
+    ,
+    {"field1":"78","Rank":"79","AnimeInfoSite":"\"https://bangumi.tv/subject/1671\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/64/7c/1671_vQ2W9.jpg\"","Name":"\"化物语\"","OrgName":"\"化物語\"","rating":"8.3","judge":"11673","info":"\"15话 /  2009年7月3日 / 新房昭之 / 西尾維新「化物語」（講談社BOX） / 渡辺明夫\""}
+    ,
+    {"field1":"79","Rank":"80","AnimeInfoSite":"\"https://bangumi.tv/subject/3553\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/e2/50/3553_C9ccy.jpg\"","Name":"\"∀高达\"","OrgName":"\"∀ガンダム\"","rating":"8.3","judge":"1170","info":"\"50话 /  1999年4月9日 / 富野由悠季 / 矢立肇、富野由悠季\""}
+    ,
+    {"field1":"80","Rank":"81","AnimeInfoSite":"\"https://bangumi.tv/subject/33352\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/eb/09/33352_J6F40.jpg\"","Name":"\"爆漫王。3\"","OrgName":"\"バクマン。3\"","rating":"8.3","judge":"2953","info":"\"25话 /  2012年10月6日 / カサヰケンイチ、秋田谷典昭 / 大場つぐみ、小畑健 / 下谷智之\""}
+    ,
+    {"field1":"81","Rank":"82","AnimeInfoSite":"\"https://bangumi.tv/subject/147068\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/a7/86/147068_60GJJ.jpg\"","Name":"\"3月的狮子\"","OrgName":"\"3月のライオン\"","rating":"8.3","judge":"4336","info":"\"22话 /  2016年10月8日 / 新房昭之 / 羽海野チカ（白泉社 ヤングアニマル連載） / 杉山延寛\""}
+    ,
+    {"field1":"82","Rank":"83","AnimeInfoSite":"\"https://bangumi.tv/subject/605\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/c3/61/605_CZYx4.jpg\"","Name":"\"棋魂\"","OrgName":"\"ヒカルの碁\"","rating":"8.3","judge":"3041","info":"\"75话 /  2001年10月10日 / 西澤晋、神谷純、えんどうてつや / ほったゆみ、小畑健 / 本橋秀之、関口可奈味、上田美由紀、芝美奈子\""}
+    ,
+    {"field1":"83","Rank":"84","AnimeInfoSite":"\"https://bangumi.tv/subject/2734\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/7f/7c/2734_SL2ol.jpg\"","Name":"\"星空清理者\"","OrgName":"\"プラネテス\"","rating":"8.3","judge":"2303","info":"\"26话 /  2003年10月4日\""}
+    ,
+    {"field1":"84","Rank":"85","AnimeInfoSite":"\"https://bangumi.tv/subject/1856\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/3c/94/1856_QFtne.jpg\"","Name":"\"十二国记\"","OrgName":"\"十二国記\"","rating":"8.3","judge":"2438","info":"\"45话 /  2002年4月9日 / 小林常夫、栗原ひばり(40話のみ) / 小野不由美 / 田中比呂人、楠本祐子\""}
+    ,
+    {"field1":"85","Rank":"86","AnimeInfoSite":"\"https://bangumi.tv/subject/41568\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/09/9c/41568_LhL6X.jpg\"","Name":"\"歌牌情缘2\"","OrgName":"\"ちはやふる2\"","rating":"8.3","judge":"2922","info":"\"25话 /  2013年1月11日 / 浅香守生 / 末次由紀（講談社「BE・LOVE」連載）\""}
+    ,
+    {"field1":"86","Rank":"87","AnimeInfoSite":"\"https://bangumi.tv/subject/2496\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/12/ff/2496_Q9lC9.jpg\"","Name":"\"物怪\"","OrgName":"\"モノノ怪\"","rating":"8.3","judge":"2641","info":"\"12话 /  2007年7月12日\""}
+    ,
+    {"field1":"87","Rank":"88","AnimeInfoSite":"\"https://bangumi.tv/subject/1269\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/e0/04/1269_8hpU3.jpg\"","Name":"\"水星领航员 第二季\"","OrgName":"\"ARIA The NATURAL\"","rating":"8.3","judge":"1447","info":"\"26话 /  2006年4月2日 / 佐藤順一 / 天野こずえ / 古賀誠\""}
+    ,
+    {"field1":"88","Rank":"89","AnimeInfoSite":"\"https://bangumi.tv/subject/860\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/fc/49/860_6qo6D.jpg\"","Name":"\"星际牛仔 天国之扉\"","OrgName":"\"カウボーイビバップ 天国の扉\"","rating":"8.3","judge":"3167","info":"\"1话 /  2001年9月1日 / 矢立肇\""}
+    ,
+    {"field1":"89","Rank":"90","AnimeInfoSite":"\"https://bangumi.tv/subject/1104\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/4d/a0/1104_iIpHU.jpg\"","Name":"\"机器人总动员\"","OrgName":"\"Wall·E\"","rating":"8.3","judge":"3508","info":"\"1话 /  2008-06-27 / Andrew Stanton\""}
+    ,
+    {"field1":"90","Rank":"91","AnimeInfoSite":"\"https://bangumi.tv/subject/100501\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/8e/30/100501_M7o32.jpg\"","Name":"\"太空丹迪 第二季\"","OrgName":"\"スペース☆ダンディ シーズン2\"","rating":"8.3","judge":"1866","info":"\"13话 /  2014年7月6日\""}
+    ,
+    {"field1":"91","Rank":"92","AnimeInfoSite":"\"https://bangumi.tv/subject/493\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/2f/55/493_zK3f5.jpg\"","Name":"\"皇家国教骑士团 OVA\"","OrgName":"\"HELLSING OVA\"","rating":"8.3","judge":"3234","info":"\"10话 /  2006年2月10日 / ところともかず（#1 - #4）、田中洋之（#5 - #7）、松村やすひろ（#8、#10）、鈴木健一（#9 - #10） / 平野耕太\""}
+    ,
+    {"field1":"92","Rank":"93","AnimeInfoSite":"\"https://bangumi.tv/subject/772\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/e5/7c/772_yFW6i.jpg\"","Name":"\"福音战士新剧场版：序\"","OrgName":"\"ヱヴァンゲリヲン新劇場版:序\"","rating":"8.2","judge":"6930","info":"\"1话 /  2007年9月1日 / 庵野秀明\""}
+    ,
+    {"field1":"93","Rank":"94","AnimeInfoSite":"\"https://bangumi.tv/subject/769\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/28/8c/769_oP9Vs.jpg\"","Name":"\"飞跃巅峰！\"","OrgName":"\"トップをねらえ!\"","rating":"8.3","judge":"2721","info":"\"6话 /  1988年10月7日 / 庵野秀明 / 岡田斗司夫\""}
+    ,
+    {"field1":"94","Rank":"95","AnimeInfoSite":"\"https://bangumi.tv/subject/842\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/fc/3c/842_clVl2.jpg\"","Name":"\"东京教父\"","OrgName":"\"東京ゴッドファーザーズ\"","rating":"8.2","judge":"3319","info":"\"1话 /  2003年11月8日 / 今敏 / 今敏 / 小西賢一、今敏\""}
+    ,
+    {"field1":"95","Rank":"96","AnimeInfoSite":"\"https://bangumi.tv/subject/120700\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/3d/55/120700_ae3wr.jpg\"","Name":"\"虫师 特别篇 铃之雫\"","OrgName":"\"蟲師 特別編「鈴の雫」\"","rating":"8.3","judge":"1198","info":"\"1话 /  2015年5月16日 / 長濵博史 / 漆原友紀 / 馬越嘉彦\""}
+    ,
+    {"field1":"96","Rank":"97","AnimeInfoSite":"\"https://bangumi.tv/subject/37785\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/9a/64/37785_aBBEd.jpg\"","Name":"\"来自新世界\"","OrgName":"\"新世界より\"","rating":"8.2","judge":"7291","info":"\"25话 /  2012年9月28日 / 久保田誓（メイン）、清水祐実（サブ）\""}
+    ,
+    {"field1":"97","Rank":"98","AnimeInfoSite":"\"https://bangumi.tv/subject/18692\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/b4/4f/18692_E04qh.jpg\"","Name":"\"哆啦A梦\"","OrgName":"\"ドラえもん\"","rating":"8.3","judge":"1928","info":"\"2005年4月15日 / 善聡一郎（#1-#489）、八鍬新之介（#490-#515） / 藤子・F・不二雄 / 渡辺歩→渡辺歩、富永貞義→丸山宏一、富永貞義→富永貞義→吉田誠、富永貞義→丸山宏一\""}
+    ,
+    {"field1":"98","Rank":"99","AnimeInfoSite":"\"https://bangumi.tv/subject/88473\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/26/f1/88473_e7hEE.jpg\"","Name":"\"虫师 特別篇 蚀日之翳\"","OrgName":"\"蟲師 特別篇 日蝕む翳\"","rating":"8.3","judge":"1831","info":"\"1话 /  2014年1月4日 / 長濵博史 / 漆原友紀 / 馬越嘉彦\""}
+    ,
+    {"field1":"99","Rank":"100","AnimeInfoSite":"\"https://bangumi.tv/subject/4124\"","ImgSite":"\"https://lain.bgm.tv/pic/cover/s/7d/c3/4124_IJACQ.jpg\"","Name":"\"Heart Catch 光之美少女!\"","OrgName":"\"ハートキャッチプリキュア!\"","rating":"8.3","judge":"744","info":"\"49话 /  2010年2月7日 / 長峯達也 / 東堂いづみ / 馬越嘉彦\""}
+    ]
+    
+
+function myParseJson(json) {
+    let myJson = "";    
+    // console.log(json)
+    $.each(json, function (key,value) {
+        // console.log(value);
+        myJson += `<li class="animeRect">
+                        <a href=${value.AnimeInfoSite} class="animeCover animeAnchor">
+                            <img src=${value.ImgSite} alt='${value.Name}'>
+                        </a>
+                        <div class="animeInner">
+                            <a href=${value.AnimeInfoSite} class="animeAnchor titleAnchor"><span class="animeTitle">${value.Name}</span></a>
+                        </div>
+                    </li>`
+        let singleAnime = {
+            Name:value.Name,
+            ImgSite:value.ImgSite,
+            AnimeInfoSite:value.AnimeInfoSite
+        };
+        singleAnime = JSON.stringify(singleAnime);
+        localStorage.setItem(value.Name,singleAnime);
+    });
+    $(".animeUl").append(myJson);
+    
+}
+/*
+    在网页准备就绪后，
+    在localStorage进行查找是否有以"firstOpen"为键的数据
+    如果没有，执行readLS()方法，进行动漫列表初始化，并且添加以"firstOpen"为键的数据
+    如果已经有过了，就直接读取localStorage，将其中的数据添加进网页中
+    最后给所有li都添加上右击事件方法
+*/
+$(function () {
+    /*
+        使用cookie来判断是不是刚打开的页面，
+        但由于cookie默认关闭浏览器就丢失，设置日期又不太舒服，因此废弃
+    */ 
+    // console.log(document.cookie);
+    // if(document.cookie == ""){
+    //     // console.log(1);
+    //     myParseJson(myAnimeJson);
+    //     document.cookie="isFirstOpen=True"
+    // }
+    if(!window.localStorage.getItem('firstOpen')){
+        myParseJson(myAnimeJson);
+        window.localStorage.setItem('firstOpen','True');
+    }else{
+        readLS();
+    }
+    $(".animeRect").contextmenu(function (e) {
+        popUpContextMenu(e.clientX, e.clientY + scrollY, this);
+    });
+})
+
+/*
+    通过遍历的方式对localStorage中的所有数据进行遍历
+    跳过检测是否是第一次打开的键值对
+    将遍历的每一项解析为对象格式并保存在数组中
+    最后使用myParseJson方法进行初始化动漫列表
+*/
+function readLS() {
+    let lSJson = []
+    for(let i = 0; i < window.localStorage.length; i++){
+        if(localStorage.getItem(window.localStorage.key(i)) === window.localStorage.getItem('firstOpen')){
+            console.log(1);
+            continue;
+        }
+        // console.log(typeof localStorage.getItem(window.localStorage.key(i)));
+        lSJson.push(JSON.parse(localStorage.getItem(window.localStorage.key(i))));
+    }
+    myParseJson(lSJson)
+}

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="user-scalable=0">
+
+    <title>原神UP资料</title>
+    <script src="jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="./yuanshen.css">
+    <link rel="shortcut icon" href="./img/paimeng.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+        integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+    <!-- <link rel="stylesheet" href="bootstrap.min.css">   -->
+
+</head>
+
+<body>
+    <!-- 改的模态框 -->
+    <!-- Modal -->
+    <div class="modal fade" id="gaiModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">修改UP</h4>
+                </div>
+                <div class="modal-body" style="height: 230px;">
+
+                    <div id="changelook">
+                        <img src=" " alt="" id="changelookimg" width="150px" height="150px">
+                    </div>
+
+
+                    <form class="form-horizontal" style="float: left;margin-top: 8px;">
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" id="changename" placeholder="名字">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">Attr</label>
+                            <div class="col-sm-10">
+                                <input type="" class="form-control" id="changeshuxing" placeholder="属性">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">Star</label>
+                            <div class="col-sm-10">
+                                <input type="" class="form-control" id="changexingxi" placeholder="星系">
+                            </div>
+                        </div>
+                    </form>
+
+                    <input type="file" id="changefile" style="margin: 168px 0 0 -532px; float: left;">
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" id="changetest" class="btn btn-default" data-dismiss="modal">Sure</button>
+                    <!-- <button type="button" id="test" class="btn btn-primary">Sure</button>  -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 增的模态框 -->
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">增加UP</h4>
+                </div>
+                <div class="modal-body" style="height: 230px;">
+                    <!-- <div style="width: 200px; height: 230px; float: left;">
+                <img src="" alt="" id="file" class="tx" style="border:1px solid #999;display: block;width: 150px;height: 150px;" onclick="chooseImageFile('EmployeePicture')" />
+                <input type="file" name="fileEmployeeImage" id="EmployeePicture" hidden accept="image/*" onchange="showImgToView('EmployeePicture')" />
+              </div> -->
+                    <div id="look">
+                        <img src=" " alt="" id="lookimg" width="150px" height="150px">
+                    </div>
+
+
+                    <form class="form-horizontal" style="float: left;margin-top: 8px;">
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" id="name" placeholder="名字">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">Attr</label>
+                            <div class="col-sm-10">
+                                <input type="" class="form-control" id="shuxing" placeholder="属性">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-2 control-label">Star</label>
+                            <div class="col-sm-10">
+                                <input type="" class="form-control" id="xingxi" placeholder="星系">
+                            </div>
+                        </div>
+                    </form>
+
+                    <input type="file" id="file" style="margin: 168px 0 0 -532px; float: left;">
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" id="test" class="btn btn-default" data-dismiss="modal">Sure</button>
+                    <!-- <button type="button" id="test"  class="btn btn-primary">Sure</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="buju">
+        <div class="header" style="width: 100%; height: 121px;margin-top:100px;">
+            <div class="header-nav">
+                <div class="header-linner">
+                    <h1>
+                        <a href="" class="a1"></a>
+                    </h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="main">
+            <div class="beijingtu"><img src="./img/yuan1.jpg" style="background-repeat: no-repeat;" alt=""></div>
+            <div class="main-box">
+                <div class="nei-wen">
+                    <h1>UP介绍
+                        <div style="margin-top: -40px;margin-left: 800px;">
+                            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
+                                data-target="#myModal">
+                                增加
+                            </button>
+                            <button type="button" id="shanchu1" class="btn btn-primary btn-lg" data-toggle="modal">
+                                删除
+                            </button>
+                            <button type="button" id="xiugai" class="btn btn-primary btn-lg" data-toggle="modal">
+                                修改
+                            </button>
+                            <button type="button" id="chongzhi" class="btn btn-primary btn-lg" data-toggle="modal">
+                                重置
+                            </button>
+                        </div>
+                        <!-- <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal"
+                            style="margin: -10px 0 0 700px;">
+                            增加
+                        </button>
+                        <button type="button" id="shanchu1" class="btn btn-primary btn-lg" data-toggle="modal"
+                            style="margin: -91px 0 0 923px;">
+                            删除
+                        </button>
+                        <button type="button" id="xiugai" class="btn btn-primary btn-lg" data-toggle="modal"
+                            style="margin: -87px 0 0 1010px; float: left;">
+                            修改
+                        </button> -->
+                    </h1>
+
+                </div>
+
+                <div class="nei-boxwai">
+                    <div class="nei-main">
+                        <div class="nei-nav" style="height: 106px; width: 1140px;">
+                            <ul class="nei-nav-left" style="width: 80px; height: 106px;">
+                                <li style="margin-top: 8px;">星系</li>
+                                <li>属性</li>
+                            </ul>
+                            <ul class="nei-nav-up">
+                                <li>
+                                    <span class="yuan">
+                                        <i class="point active" date-index='0'></i>
+                                    </span>
+                                    <label>综合</label>
+                                </li>
+
+                                <li>
+                                    <span class="yuan">
+                                        <i class="point" date-index='1'></i>
+                                    </span>
+                                    <label>五星</label>
+                                </li>
+
+                                <li>
+                                    <span class="yuan">
+                                        <i class="point" date-index='2'></i>
+                                    </span>
+                                    <label>四星</label>
+                                </li>
+                                <br>
+                                <li style="margin-top: 37px;margin-left: -269px;">
+                                    <span class="yuan">
+                                        <i class="point" date-index='3'></i>
+                                    </span>
+                                    <label>火系</label>
+                                </li>
+
+                                <li style="margin-top: 37px;margin-left: -179px;">
+                                    <span class="yuan">
+                                        <i class="point" date-index='4'></i>
+                                    </span>
+                                    <label>雷系</label>
+                                </li>
+
+                                <li style="margin-top: 37px;margin-left: -89px;">
+                                    <span class="yuan">
+                                        <i class="point" date-index='5'></i>
+                                    </span>
+                                    <label>风系</label>
+                                </li>
+
+                                <li style="margin-top: 37px;margin-left: 15px;">
+                                    <span class="yuan">
+                                        <i class="point" date-index='6'></i>
+                                    </span>
+                                    <label>冰系</label>
+                                </li>
+
+                                <li style="margin-top: 37px;margin-left: 12px;">
+                                    <span class="yuan">
+                                        <i class="point" date-index='7'></i>
+                                    </span>
+                                    <label>水系</label>
+                                </li>
+                            </ul>
+                            <div class="nav-in">
+                                <input type="text" id="find" class="nav-input" placeholder="按下Enter键搜索你想要的UP">
+                                <!-- <a href="" class="in-icon"></a> -->
+                            </div>
+                        </div>
+
+                        <div class="nei-box">
+                            <ul>
+                                <li>
+                                    <img src="" alt="" style="width: 91px; height: 91px;">
+                                    <i></i>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript" src="./yuanshen.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+    integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous">
+</script>
+<!-- <script>
+    console.log($(".nei-box ul li"));
+</script> -->
+
+</html>

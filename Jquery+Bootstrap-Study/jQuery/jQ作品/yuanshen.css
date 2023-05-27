@@ -1,0 +1,249 @@
+body{
+    margin: 0;
+    
+}
+h1,h2,div,a,li{
+    margin: 0;
+    
+}
+a{
+    text-decoration: none;
+    color: #363636;
+}
+ul, ol {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.header{
+    /* margin: 0; */
+    position: absolute;
+    z-index: 99;
+    left: 0;
+    top: 0;
+    background: rgba(0, 0, 0, 0.0);
+}
+.header-nav{
+    display: block;
+}
+.header-linner{
+    width: 1300px;
+    height: 121px;
+    margin: 0 auto;
+    position: relative;
+}
+.header-linner h1{
+    margin: 0;
+}
+.header-linner h1 a{
+    display: block;
+    background: url(./img/yuanshen.png);
+    overflow: hidden;
+    
+    width: 150px;
+    height: 119px;
+}
+.main-nav{
+    padding-left: 200px;
+}
+.beijingtu{
+    /* position: relative; */
+    margin: 0 auto;
+    width: 1902px; 
+    height: 618px;
+
+}
+.main{
+    position: relative;
+    height: auto;
+    width: 1902px;
+    margin: 0 auto;
+    background-color: #99b8dd;
+    overflow: hidden;
+}
+.buju{
+    margin: 0 auto;
+}
+.main-box{
+    width: 63.1%;
+    height: 1505px;
+    margin-left: 18.5%;
+}
+.nei-box{
+    /* margin-bottom: 50px; */
+    height: 1250px;
+    padding: 35px 28px;
+    /* border: 2px solid #E8E8E8; */
+    /* border-top: 0; */
+    position: relative;
+}
+.nei-wen{
+    /* background-color: #ffffff; */
+    border-radius: 5px;
+    padding: 20px 28px 0px 28px;
+}
+.nei-nav{
+    background-color: #EFEFEF;
+    border-radius: 5px;
+    position: relative;
+}
+.nei-nav li{
+    cursor: pointer;
+}
+.point{
+    background-image: url(./img/蓝xiaobiao.png);
+    background-position: -37px 0;
+    background-repeat: no-repeat;
+    float: left;
+    color: transparent;
+    width: 20px;
+    height: 20px;
+}
+.active{
+    background-position: 0 -37px;
+}
+
+.nei-nav-left{
+    float: left;
+    text-align: center;
+    background-color: #2C88E2;
+    color: #fff;
+    border-radius: 5px 0 0 5px;
+}
+.nei-nav-left li{
+    line-height: 45px;
+    font-size: 17px;
+}
+.nei-nav-up{
+    float: left;
+    width: 747px;
+    padding: 10px 0;
+    line-height: 20px;
+}
+.nei-nav-up li{
+    float: left;
+    padding-left: 15px;
+    min-width: 90px;
+    cursor: pointer;
+}
+.nei-nav-up label{
+    float: left;
+    cursor: pointer;
+    line-height: 19px;
+}
+.yuan{
+    /* display: inline-block;S */
+    float: left;
+    width: 18px;
+    height: 18px;
+    margin-right: 7px;
+    border: 1px solid #B3B3B3;
+    border-radius: 50px;
+    position: relative;
+}
+
+
+.nav-in{
+    position: absolute;
+    top: 59px;
+    right: 60px;
+    border: 1px solid #D2D2D2;
+    padding: 7px;
+    height: 37px;
+    width: 220px;
+}
+.nav-input{
+    float: left;
+    border: none;
+    width: 80%;
+    height: 22px;
+    line-height: 20px;
+    font-size: 12px;
+    color: #747475;
+    background: none;
+    outline: none;
+}
+.in-icon{
+    float: right;
+    padding-left: 39px;
+    width: 17px;
+    height: 27px;
+    border-left: 1px solid #D5D5D5;
+    background: url(./img/sousuo.png) no-repeat 12px center;
+}
+.nei-box{
+    width: 1140px;
+    height: 500px;
+}
+.nei-box ul{
+    width: 1140px;
+    /* height: 500px; */
+}
+.nei-box li{
+    float: left;
+    width: 94px;
+    transition: .25s;
+    text-align: center;
+    cursor: pointer;
+    /* height: 108px; */
+    margin: 0 30px 34px 0;
+    
+}
+
+.nei-box a{
+    text-align: center;
+    display: block;
+}
+.nei-box img{
+    width: 83px;
+    height: 83px;
+    border: 2px solid #258DF2;
+    border-radius: 10px 0 10px 0;
+}
+.zeng{
+    margin-left: 230px;
+    margin-top: -183px;
+    float: left;
+    width: 260px;
+    /* height: 300px; */
+    margin-bottom: 40px;
+}
+/* .nei-box li:hover{
+    box-shadow: 0 24px 30px 0 rgba(0, 0, 0, 0.24), 0 5px 5px 0 rgba(0, 0, 0, 0.19);
+    transform: translate3d(0, 1px, 0); 
+} */
+i{
+    font-style: normal;
+}
+.tuxiazi{
+    width: 14px;
+    height: 14px;
+}
+#look{
+    width: 160px;
+    height: 160px;
+    float: left;
+}
+#changelook{
+    width: 160px;
+    height: 160px;
+    float: left;
+}
+#name{
+    width: 305px;
+    height: 37px;
+}
+#changename{
+    width: 305px;
+    height: 37px;
+}
+#shuxing{
+    width: 305px;
+    height: 37px;
+}
+#lookimg{
+    background-color: #42c2e8;
+}
+#changelookimg{
+    background-color: #42c2e8;
+}

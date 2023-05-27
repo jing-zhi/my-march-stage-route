@@ -1,0 +1,8 @@
+1，background
+2，Beautify
+3，Chinese 
+4，Color Highlight
+5，CSS Peek
+6，HTML CSS Support
+7，Live Server
+8，open in browser

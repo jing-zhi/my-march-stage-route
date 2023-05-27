@@ -1,0 +1,759 @@
+* {
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+}
+
+:root {
+    --cubic-bezier: cubic-bezier: cubic-bezier(0.65, 0.05, 0.1, 1);
+}
+
+body {
+    overflow-x: hidden;
+    max-width: 100%;
+    height: 100%;
+    cursor: default;
+    user-select: none;
+    font-family: "Microsoft Yahei Light";
+    background-color: #333;
+}
+
+a {
+    text-decoration: none !important;
+    color: #fff !important ;
+}
+
+li {
+    list-style-type: none;
+}
+
+/*定位首页*/
+.top {
+    top: 0;
+}
+
+/*背景图*/
+.topbg {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-image: url(../img/personalpagebg.png);
+    background-size: cover;
+    background-position: center;
+}
+
+/*顶部导航栏*/
+.topnavbar {
+    position: absolute;
+    height: 110px;
+    width: 100%;
+    z-index: 9999;
+    transition: .25s;
+}
+
+/*顶部导航栏的个人签名*/
+.topbarimg {
+    position: absolute;
+    width: 250px;
+    height: 100px;
+    top: -10%;
+    margin-left: 125px;
+    background-image: url(../img/qm.png);
+    background-size: cover;
+    transition: .25s;
+}
+
+/*正常情况的按钮*/
+.topnavbar input {
+    display: none;
+}
+
+.topnavbar label {
+    display: none;
+    position: absolute;
+    top: 43px;
+    left: 100%;
+    margin-left: -50px;
+    padding: 6px 0;
+    border-top: 2px solid;
+    border-bottom: 2px solid;
+    background-clip: content-box;
+    width: 25px;
+    height: 2px;
+    z-index: 3;
+    background-color: rgb(0, 0, 0, 0.5);
+    border-color: rgb(0, 0, 0, 0.5);
+    transition: all 0.3s ease-out;
+}
+
+.topbarnav label:hover {
+    cursor: pointer;
+}
+
+.topnavbar input:checked~.mintopbarcontent .topbarnavlist {
+    display: block;
+    z-index: 2;
+}
+
+.topnavbar input:checked~label {
+    background-color: rgb(0, 0, 0, 0.5);
+    border-color: rgb(0, 0, 0, 0.5);
+}
+
+.topnavbar input:checked~.blackcurtain {
+    display: block;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+/*正常导航栏*/
+.topbarcontent .topbarnavlist {
+    position: absolute;
+    top: 37%;
+    left: 100%;
+    margin-left: -470px;
+    text-align: center;
+}
+
+.topbarcontent .topbarnavlist li {
+    display: inline-block;
+    width: 30px;
+    height: 19px;
+    margin: 0 20px;
+}
+
+.topbarcontent .topbarnavlist li a {
+    width: 30px;
+    font-size: 15px;
+}
+
+/*页面宽度变小导航栏*/
+.mintopbarcontent ul {
+    position: fixed;
+    padding-top: 20%;
+    right: 0;
+    width: 30%;
+    height: 100%;
+    display: none;
+    background-color: white;
+    transition: all 0.5s ease-out;
+}
+
+.mintopbarcontent ul li {
+    width: 100%;
+}
+
+.mintopbarcontent ul a {
+    display: block;
+    padding: 5% 10%;
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 12px;
+}
+
+.mintopbarcontent ul a:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: black;
+}
+
+/*黑幕*/
+.blackcurtain {
+    position: fixed;
+    /* z-index: -99; */
+    display: none;
+    width: 70%;
+    height: 100%;
+    background: transparent;
+    transition: all .3s;
+}
+
+/*首页*/
+.toptitle {
+    position: absolute;
+    top: 30%;
+    width: 100%;
+}
+
+.toptitle h1,
+h2,
+.underline {
+    text-align: center;
+    font-weight: normal;
+    color: #fff;
+}
+
+.toptitle h1 {
+    margin: 50px 0;
+    font-size: 75px;
+}
+
+.toptitle h2 {
+    font-size: 15px;
+}
+
+.underline {
+    position: absolute;
+    left: 50%;
+    margin-left: -35px;
+    margin-top: -30px;
+    width: 70px;
+    border-bottom: 4px solid rgb(112, 192, 0);
+}
+
+/*关于*/
+.container {
+    position: absolute;
+    height: 100%;
+    width: 100% !important;
+    --bs-gutter-x: unset !important;
+}
+
+#about,
+#work,
+#likeAnime,
+#likeCharacter,
+footer {
+    position: relative;
+    overflow: hidden;
+    top: 100%;
+    width: 100%;
+    padding-top: 80px;
+    padding-bottom: 100px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+h3 {
+    margin: 50px !important;
+    font-size: 30px;
+}
+
+#about {
+    background-color: #fff;
+}
+
+#about p {
+    font-size: 14px;
+    line-height: 40px;
+}
+
+.tag {
+    display: inline-block;
+    padding: 10px;
+    margin: 0 4px;
+    font-size: small;
+    background-color: rgb(100 100 100/0.1);
+    transition: all 0.2s;
+}
+
+.tag:hover {
+    background-color: rgb(100 100 100/0.2);
+    box-shadow: 0 6px 8px 1px rgb(0 0 0/0.1);
+}
+
+.contentbox {
+    margin-top: 20px;
+}
+
+/*考核作品*/
+#work,
+#likeCharacter {
+    background-color: rgb(245, 245, 245);
+}
+
+#work .worklist,
+#likeAnime .allAnime,
+#likeCharacter .panels {
+    width: 1200px;
+    margin: 50px auto 0;
+}
+
+#work .worklist .workbox {
+    display: inline-block;
+    overflow: hidden;
+    width: 300px;
+    height: 250px;
+    margin: 30px 15px;
+    list-style-type: none;
+    background-color: white;
+    transition: all 0.5s;
+}
+
+#work .worklist .workbox a {
+    height: 250px;
+}
+
+#work .worklist .workbox:hover {
+    box-shadow: rgb(0 0 0 / 12%) 0px 10px 10px;
+    transform: translate3d(0, -10px, 0);
+}
+
+
+
+.workbox p {
+    margin-left: 20px;
+    text-align: left;
+    margin-bottom:0 !important;
+}
+
+.worktitle,
+.worktag {
+    margin-top: 10px;
+}
+
+.worktitle,
+.workdesc {
+    color: black;
+}
+
+.worktitle {
+    font-weight: bold;
+}
+
+.workdesc {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.worktag {
+    font-size: 12px;
+    color: rgb(0, 0, 0, 0.5);
+}
+
+#circle {
+    position: relative;
+    border-radius: 50%;
+    width: 33%;
+    height: 40%;
+    background-color: rgba(0, 0, 0, 0.1);
+    margin-left: 33%;
+    margin-top: 25%;
+    transition: .25s;
+}
+
+#circle::before,
+#circle::after {
+    content: '';
+    position: absolute;
+    height: 50px;
+    width: 8px;
+    top: 50%;
+    left: 50%;
+    margin-left: -4px;
+    margin-top: -25px;
+    background-color: gray;
+}
+
+#circle::before {
+    margin-left: -4px;
+    margin-top: -25px;
+    transform: rotate(90deg);
+}
+
+#circle:hover {
+    box-shadow: rgb(0 0 0 / 12%) 0px 10px 10px;
+    transform: translate3d(0, -2px, 0);
+}
+
+.worklist .workul #addNewWork {
+    background-color: transparent;
+}
+
+.worklist .workul #addNewWork:hover {
+    box-shadow: unset;
+    transform: unset;
+}
+
+.workimg {
+    width: 100%;
+}
+
+#likeAnime {
+    background-color: #fff;
+}
+
+input[type="search"] {
+    width: 230px;
+    margin: 0 auto;
+    border: 2px solid #DDD;
+    border-radius: 30px;
+    outline: none;
+    padding: 7px 15px;
+    text-align: center;
+}
+
+.animeRect {
+    display: block;
+    float: left;
+    width: 105px;
+    height: 180px;
+    margin-right: 25px;
+    transition: all .5s;
+}
+.animeRect a img{
+    width: 78px;
+
+}
+
+.animeRect::after,
+.allAnime::after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.animeUl {
+    width: 800px;
+    height: 635px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    margin: 0 auto;
+}
+
+.animeCover {
+    display: block;
+}
+.animeCover img {
+    max-width: 100px;
+}
+
+.animeTitle {
+    color: rgb(112, 192, 0);
+    font-size: 11px
+}
+
+.animeTitle:hover {
+    text-decoration: underline;
+}
+
+/*媒体查询，自适应导航栏*/
+@media screen and (max-width: 900px) {
+    .topnavbar label {
+        display: block;
+    }
+
+    .topbarcontent {
+        display: none;
+    }
+
+    .topbarimg {
+        margin-left: -13px;
+    }
+
+    .mintopbarcontent {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 1150px) {
+    #work .worklist {
+        width: auto;
+    }
+}
+
+/* 右键菜单 */
+#spaceRightClick,
+#workRightClick,
+#workRightClickAnime {
+    transform-origin: 0% 0%;
+    position: absolute;
+    display: none;
+    width: 160px;
+    opacity: 0;
+    transform: scale(0.5);
+    box-shadow: rgb(0 0 0 / 10%) 0 2px 10px;
+
+    /* 透过该层的底部元素模糊化，blur是模糊 */
+    backdrop-filter: blur(10px);
+
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, .6);
+    transition: .25s var(--cubic-bezier);
+}
+
+#spaceRightClick {
+    height: 40px;
+}
+
+#workRightClick,
+#workRightClickAnime {
+    height: 80px;
+}
+
+.rightMenu {
+    display: block;
+    width: 160px;
+    height: 16px;
+    padding-left: 20px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    color: black;
+    font-size: 11px;
+    transition: .25s;
+}
+
+.rightMenu:hover {
+    background-color: rgba(255, 255, 255, .4);
+}
+
+/* 编辑窗口 */
+#setWorkinfo,
+#editorPop {
+    position: absolute;
+    display: none;
+    opacity: 0;
+    z-index: 51;
+    top: 50%;
+    left: 20%;
+    width: 300px;
+    height: 254px;
+    overflow: hidden;
+    transform: scale(0.5);
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: rgb(0 0 0 / 10%) 0 10px 15px;
+    transition: .25s var(--cubic-bezier);
+    transform-origin: 50% 100%;
+}
+#editorPop{
+    height: 185px;
+}
+#editclose,
+#editcloseAnime
+{
+    z-index: 99;
+    position: absolute;
+    top: 20px;
+    right: 7%;
+    width: 12px;
+    height: 12px;
+    cursor: pointer;
+    opacity: 1;
+    transition: .25s;
+}
+
+#editclose::before,
+#editclose::after,
+#editcloseAnime::before,
+#editcloseAnime::after {
+    content: '';
+    position: absolute;
+    height: 1px;
+    width: 100%;
+    top: 50%;
+    left: 0;
+    margin-top: -1px;
+    background-color: rgb(160, 160, 160);
+    transition: .25s;
+}
+
+#editclose::before,
+#editcloseAnime::before {
+    transform: rotate(45deg);
+}
+
+#editclose::after,
+#editcloseAnime::after {
+    transform: rotate(-45deg);
+}
+
+#editTag,
+#editTagAnime {
+    position: relative;
+    left: 7%;
+    top: 15px;
+    color: black;
+    font-size: small;
+}
+
+.inputCustom {
+    position: relative;
+    margin-top: 10px;
+    padding: 0 15px;
+    left: 21%;
+    width: 61.5%;
+    height: 25px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    color: black;
+    background-color: rgba(0, 0, 0, 0.05);
+    font-size: small;
+    transition: .25s;
+}
+
+#workurl,
+#workurlAnime{
+    margin-top: 25px;
+}
+
+#savebut,
+#savebutAnime {
+    position: absolute;
+    margin-top: 10px;
+    right: 7%;
+    padding: 5px 20px;
+    font-size: 11px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    font-family: "Pingfang SC";
+    background-color: #5CA1FF;
+    transition: .25s;
+    cursor: pointer;
+}
+
+.inptitle {
+    position: absolute;
+    font-size: 12px;
+    left: 7%;
+    line-height: 45px;
+}
+
+.firstinptitle {
+    top: 33px
+}
+
+.panels {
+    display: flex;
+    height: 600px;
+    justify-content: center;
+}
+
+.panel {
+    position: relative;
+    display: flex;
+    flex: 1;
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+    vertical-align: middle;
+    justify-content: center;
+    font-size: 30px;
+    font-family: "华文行楷", "Microsoft YaHei UI";
+    transition: all .7s;
+}
+
+.panel:hover {
+    cursor: pointer;
+}
+
+.panel1 {
+    background-image: url(../img/Ireina.png);
+}
+
+.panel2 {
+    background-image: url(../img/Cierra_runis.png);
+}
+
+.panel3 {
+    background-image: url(../img/KatoMegumi.png);
+}
+
+.panel4 {
+    background-image: url(../img/zhenbai.png);
+}
+
+.panel5 {
+    background-image: url(../img/shenlilinghua.png);
+}
+
+.panel p {
+    display: flex;
+    flex: 1;
+    color: white;
+    justify-content: center;
+    writing-mode: vertical-rl;
+    text-align: center;
+    align-items: center;
+    text-shadow: 0 0 4px rgb(0 0 0 / 72%), 0 0 14px rgb(0 0 0 / 45%);
+}
+
+.panelOpen {
+    flex: 5;
+    font-size: 40px;
+}
+
+.fakeCursor {
+    animation: cursorChange 1s infinite;
+}
+
+@keyframes cursorChange {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+button[type='button']{
+    position: absolute;
+    width: 80px;
+    height: 40px;
+    border-radius: 50px;
+    background-color: transparent;
+    border: 1px solid #DDD;
+    color: #777;
+    outline: unset !important;
+    transition: background-color .3s;
+}
+button[type='button']:active{
+    background-color: rgb(79, 143, 226);
+}
+#addAnimeRectButton{
+    margin-left: -85px;
+}
+#searchBut{
+    margin-left: 5px;
+}
+
+.controlRect{
+    position: relative;
+}
+/* 去除搜索框右边的×号  */
+input[type="search"]::-webkit-search-cancel-button{
+    display: none;
+    autocomplete:off;
+}
+/* 修改BootStrap自带的媒体查询 */
+@media (min-width: 1400px){
+    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+        max-width: 100% !important;
+    }
+}
+
+@media (min-width: 1200px){
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 100% !important;
+    }
+}
+
+@media (min-width: 992px){
+    .container, .container-lg, .container-md, .container-sm {
+        max-width: 100% !important;
+    }
+}
+
+@media (min-width: 768px){
+    .container, .container-md, .container-sm {
+        max-width: 100% !important;
+    }
+}
+
+@media (min-width: 576px){
+    .container, .container-sm {
+        max-width: 100% !important;
+    }
+}
+ul{
+    padding-left: unset !important;
+}
+li, ::after, ::before{
+    box-sizing: unset;
+}

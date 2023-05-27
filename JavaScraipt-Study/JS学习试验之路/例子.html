@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./lizi.css">
+
+</head>
+<body>
+    <div id="dada"></div>
+</body>
+
+<script>
+    // 获取元素
+    var gdada = document.getElementById("dada")
+    console.log(gdada,"11111")
+    // 鼠标按下事件
+    gdada.onmousedown = function(ev){
+        var ev  = ev||window.event;
+
+        // 获取鼠标相对于盒子坐标
+        var x1 = ev.offsetX;
+        var y1 = ev.offsetY;
+        console.log;
+
+        // 鼠标移动
+        document.onmousemove = function(ev){
+            var ev = ev||window.event;
+            var y2 = ev.pageY;
+            var x2 = ev.pageX;
+            gdada.style.top = y2-y1+"px";
+            gdada.style.left = x2-x1+"px";
+
+        }
+    }
+
+    // 鼠标移开事件
+    document.onmouseup = function(){
+        document.onmousemove = function(){
+
+        }
+
+    }
+</script>
+</html>

@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "..\\..\\A国际知名程序员\\my-march-stage-route"
+		}
+	],
+	"settings": {
+    "liveServer.settings.multiRootWorkspaceName": "Jquery+Bootstrap",
+    "git.ignoreLimitWarning": true
+	}
+}

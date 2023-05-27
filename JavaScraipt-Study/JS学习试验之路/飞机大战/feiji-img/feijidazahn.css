@@ -1,0 +1,12 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+#main{
+    width: 600px;
+    height: 900px;
+    background-image: url(./feiji-img/back.png);
+    position: relative; 
+    margin: 20px auto;
+    overflow: hidden;
+}

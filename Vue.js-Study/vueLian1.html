@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="./vue.js"></script>
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <p v-for="(item,i) in list">索引i---每一项item</p>
+  </div>
+</body>
+<script>
+  var vm = new Vue({
+    el:'#app',
+    data() {
+      return {
+        list: [1,2,1,4,5,6,1,1,1,1,1,1]
+      }
+    },
+  })
+</script>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue练习</title>
+  <link rel="stylesheet" href="./lianxi.css">
+  <script src="./vue.js"></script>
+  <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script> -->
+</head>
+
+<body>
+
+  <div id="app">
+    <cpn></cpn>
+    <cpn><i>niuniu</i></cpn>
+    <cpn slot="xxx"><p>具名插槽</p></cpn>
+  </div>
+  <template id="cpn">
+    <div>
+      <h2>woshuai</h2>
+      <p>nimeiwoniucaiji </p>
+      <slot><button>dada</button></slot>
+      <slot name="xxx">123</slot>
+    </div>
+  </template>
+  
+  <!-- <div id="app">
+    <span v-if="type">
+      <label for="username">用户登录</label>
+      <input type="text" placeholder="用户账户" id="username">
+    </span>
+    <span v-else> 
+      <label for="email">邮箱登录</label>
+      <input type="text" id="email" placeholder="邮箱地址">
+    </span>
+    <button @click="type = !type">切换登录方式</button>
+  </div> -->
+
+
+  <!-- <div id="app">
+        <ol>
+            <todo-item v-for="item in sites" v-bind:todo="item"></todo-item>
+        </ol>
+    </div> -->
+
+  <!-- <div id="app">
+        <input v-model="parentMsg">
+        <br>
+        <child v-bind:message = "parentMsg"></child>
+    </div> -->
+
+
+  <!-- <div id="asd">
+        <div v-bind:class="obj"></div>
+    </div>
+
+    <div class="qwe">
+        <p v-bind:style="[backact,yanseact]">我是大帅哥，会很有钱</p>
+        <p v-show="seeyou">我有喜欢的人，想要一生相伴</p>
+    </div> -->
+
+  <!-- <div id="app">
+        <ol>
+            <todo-item
+            v-for="item in groceryList"
+            v-bind: todo="item"
+            v-bind:key="item.id"
+            ></todo-item>
+        </ol>
+    </div> -->
+
+  <!-- <div id="qw">   
+    <p>正常 {{ message }}</p>
+    <p>使用computed {{ reversedmessage }}</p>
+    <p>使用methods方法 {{ reversedmessage2() }}</p>
+</div> -->
+
+  <!-- <div class="asde">
+    <ol>
+        <li v-for="n in 20">
+            {{ n }}
+        </li>
+    </ol>
+</div> -->
+
+  <!-- <div class="asd">
+        <ol>
+            <li v-for="(value,key,index) in object">
+                {{index}}:{{key}}:{{ value }}
+            </li>
+        </ol>
+    </div> -->
+
+  <!-- <div class="qwe">
+        <ol>
+            <li v-for="site in sites">
+                {{site.namee}}
+            </li>
+        </ol>
+    </div> -->
+
+  <!-- <div id="app">
+        <label >修改颜色</label><input type="checkbox" v-model="use" >
+        <br>
+        <div v-bind:class="{'bac':use}">
+            v-bind:bac 指令
+        </div>
+    </div> -->
+</body>
+<script src="./lianxi.js"></script>
+
+</html>

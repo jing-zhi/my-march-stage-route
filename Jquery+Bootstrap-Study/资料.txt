@@ -1,0 +1,8 @@
+模态框中的，图片预览和上传加载
+https://blog.csdn.net/weixin_44484756/article/details/90268583
+B站视频
+jQuery pink 老师
+https://www.bilibili.com/video/BV1a4411w7Gx?p=76&spm_id_from=pageDriver  本地存储
+bootstrap官方文档
+https://v3.bootcss.com/
+可以

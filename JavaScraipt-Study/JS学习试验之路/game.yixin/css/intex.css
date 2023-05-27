@@ -1,0 +1,245 @@
+body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, /* structural elements 结构元素 */
+dl, dt, dd, ul, ol, li, /* list elements 列表元素 */
+pre, /* text formatting elements 文本格式元素 */
+form, fieldset, legend, button, input, textarea, /* form elements 表单元素 */
+th, td /* table elements 表格元素 */ {
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+
+
+.box{
+    box-sizing:border-box
+}
+/* em 和 i 斜体的文字不倾斜 */
+em,
+i {
+    font-style: normal
+}
+/* 去掉li 的小圆点 */
+li {
+    list-style: none
+}
+a {
+    text-decoration: none;
+    color: #000;
+}
+.w{
+    width: 100%;
+    min-width: 1200px;
+    margin: 0 auto;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+.header{
+    width: 100%;
+    height: 66px;
+    background-color:#fff;
+    opacity: 0.8;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    box-shadow: 0px 3px 10px 0 rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid #e6e6e6;
+
+}
+.header:hover{
+    background-color: #333;
+    opacity: 1;
+    box-shadow: none;
+    
+}
+.header_container{
+    width: 1200px;
+    margin: 0  auto;
+    display: flex;
+    justify-content: space-between;
+
+}
+.yixinyouxi{
+    width: 240px;
+    height: 32px;
+    background-image: url(../images/logo-black.png);
+    background-repeat: no-repeat;
+    background-size: auto 32px;
+    margin-top: 15px;
+    vertical-align: baseline;
+}
+
+.header_container:hover .yixinyouxi {
+    background-image: url(../images/logo.png);
+
+}
+.header_container:hover .zhongxin a{
+     color: #fff;
+}
+.zhongxin{
+    width: 224px;
+    height: 36.67px;
+    vertical-align: baseline;
+    line-height: 36.67%;
+    margin-top: 30px;
+}
+.zhongxin li{
+    float: left;
+    margin-right: 40px;
+    color: #222;
+}
+.zhongxin a:hover {
+    text-decoration: underline ;
+    color: #387ee8 !important;
+}
+
+.contain{
+    min-width: 967px;
+    max-width: 1200px;
+    height: 877.67px;
+    margin: 100px auto;
+
+}
+.container{
+   width: 1200px;
+   margin-bottom: 80px;
+   padding-bottom: 75px;
+}
+.text_tittle{
+    width: 1200px;
+    height: 57.33px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid#dfe2e6;
+}
+.text_tittle p{
+    font-size: 24px;
+    color: #333;
+}
+.text_container{
+    width: 1200px;
+   height: 665.33px;
+}
+.promise{
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 30px;
+}
+.group{
+    width: 1200px;
+    height: 608px;
+}
+.same_box{
+    width: 700px;
+    height: 38.67px;
+    margin-bottom: 30px;
+    margin-top: 10px;
+}
+.padding_regin{
+    /* padding-left: 300px; */
+    width: 700px;
+    height: 38.67px;
+}
+.left_box{
+    width: 300px;
+    height: 38.67px;
+    float: left;
+    /* margin-left: -300px;
+    margin-top: 10px; */
+}
+.left_box p {
+    font-size: 14px;
+    text-align: right;
+    color: #4c4c4c;
+    line-height: 38.67px;
+    
+    
+}
+.left_box .uidt{
+    font-size: 14px;
+    color: crimson;
+}
+.right_box{
+    width: 350px;
+    height: 38.67px;
+    float: left;
+}
+input{
+    padding: 13px;
+    width: 310px;
+    height: 18px;
+    line-height: 18px;
+    border-radius: 2px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    margin-left: 10px;
+}
+.special{
+    padding: 13px;
+    width: 180px;
+    height: 18px;
+    line-height: 18px;
+    border-radius: 2px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    margin-left: 10px;
+    float:left;
+}
+button{
+    width: 100px;
+    height: 28px;
+    padding:5px 10px;
+    background-color:#387ee8;
+    margin-left: 20px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    cursor: pointer
+    /* 当我们鼠标经过button 按钮的时候，鼠标变成小手 */
+  
+}
+button p{
+    color: #fff;
+    font-size: 12px;
+}
+/* .agree{
+    width: 80px;
+    height: 18px;
+} */
+.padding_regin input{
+    height: 11px;
+   
+}
+.agree{
+    width: 20px;
+    margin-left: 300px;
+    font-size: 12px;
+}
+.same_box{
+    font-size: 12px;
+    color: #333;
+}
+.tijiao input{
+    width: 120px;
+    height: 40px;
+    background:#387ee8;
+    margin-left: 300px;
+    color: #fff;
+}
+.tijiao button p{
+    font-size: 16px;
+}
+.footer{
+    width: 1200px;
+    height: 230px;
+    margin: 0 auto;
+    text-align: center;
+    
+}
+.copright{
+    font-size: 12px;
+    color: #a0a0a0;
+    margin-bottom: 20px;
+}
+.copright a{
+    text-decoration: underline ;
+    color: #387ee8 !important;
+}

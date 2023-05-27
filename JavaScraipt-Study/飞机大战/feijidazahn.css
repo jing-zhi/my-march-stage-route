@@ -1,0 +1,64 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+#main{
+    width: 600px;
+    height: 900px;
+    background-image: url(./feiji-img/back.png);
+    position: relative; 
+    margin: 20px auto;
+    overflow: hidden;
+}
+
+#titleScore{
+    font-size: 17px;
+    font-weight: bold;
+    position: absolute;
+    margin: 5px 0 0 5px;
+    color: blanchedalmond;
+    z-index: 2;
+}
+
+#stop{
+    display: none;
+    width: 600px;
+    height: 900px;
+    font-size: 22px;
+    padding-top: 40%;
+    /* padding-left: 40%; */
+    position: absolute;
+    z-index: 10;
+    background-image: url(./feiji-img/background.png);
+    opacity: 0.9;
+}
+.button{
+    margin-top: 15px;
+    width: 130px;
+    height: 30px;
+    margin: 0 auto;
+    padding: 16px;
+    text-align: center;
+    font-weight: bolder;
+    border-radius: 15px;
+    background-color: rgba(0, 0, 0, 0.3);
+    margin-top: 15px;
+    cursor: pointer;
+}
+#stopGame{
+    /* display: none; */
+    z-index: 99;
+    width: 35px;
+    height: 35px;
+    border: 3px solid rgb(241, 233, 233);
+    color: rgb(241, 233, 233);
+    border-radius: 40px;
+    text-align: center;
+    line-height: 32px;
+    float: right;
+    margin-right: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-weight: border;
+}
+

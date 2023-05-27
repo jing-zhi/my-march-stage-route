@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>武器库</title>
+    <link href="../css/test3css.css" rel="stylesheet">
+    <script src="../jquery/jquery-1.7.1.min.js"></script>
+    <script src="../js/text3.js"></script>
+</head>
+<body>
+<img  class="mar" src="../images/9k=.jpg" >
+<div class="A">
+    <header class="box w1000 mar">
+        <h2>武器库</h2>
+        <input type="text" id="find" placeholder="请输入武器的名称进行查找">
+        <ul id="uls">
+            <li title="手枪"><img src="../images/手枪.png"></li>
+            <li title="步枪"><img src="../images/步枪.png"></li>
+            <li title="微型冲锋枪"><img src="../images/微型冲锋枪.png"></li>
+            <li title="重武器"><img src="../images/重武器.png"></li>
+            <li title="近身武器"><img src="../images/近身武器.png"></li>
+        </ul>
+    </header>
+    <section class="w1000 mar" id="section">
+        <div class="gole fl current">
+            <h1 id="weapon">武器名字</h1>
+            <ul id="present">
+                <li>
+                    <p>费用:</p>
+                    <a></a>
+                </li>
+                <li>
+                    <p>弹药:</p>
+                    <a></a>
+                </li>
+                <li>
+                    <p>击杀奖励:</p>
+                    <a></a>
+                </li>
+                <li>
+                    <p>伤害值:</p>
+                    <a></a>
+                    <i id="harm"></i>
+                </li>
+                <li>
+                    <p>开火速率:</p>
+                    <a></a>
+                </li>
+            </ul>
+        </div>
+        <div class="right fl">
+            <img id="rightimg">
+        </div>
+    </section>
+    <footer class="w1000 " id="foot">
+        <ul class="current" id="0">
+            <!-- <li>
+                <img src="../images/沙漠之鹰.png">
+                <p></p>
+            </li> -->
+        </ul>
+        <ul id="1">
+            <!-- <li>
+                <img src="../images/AK-47.png">
+                <p>AK-47</p>
+            </li> -->
+        </ul>
+        <ul id="2">
+            <!-- <li>
+                <img src="../images/MP5-SD.png">
+                <p>MP5-SD</p>
+            </li> -->
+        </ul>
+        <ul id="3">
+            <!-- <li>
+                <img src="../images/超新星.png">
+                <p>超新星</p>
+            </li> -->
+        </ul>
+        <ul id="4">
+            <!-- <li>
+                <img src="../images/匕首.png">
+                <p>匕首</p>
+            </li> -->
+        </ul>
+    </footer>
+    <button id="open">添加武器</button>
+    <!-- 弹出框 -->
+    <div id="blackmu"></div>
+    <div class="Add w1000 mar box" id="dd">
+        <label for="weaponlist">你要添加的武器类别：</label><br>
+        <p id="flase">×</p>
+        <select id="weaponlist">
+            <option value="1">手枪</option>
+            <option value="2">步枪</option>
+            <option value="3">微型冲锋枪</option>
+            <option value="4">重武器</option>
+            <option value="5">近身武器</option>
+        </select><br>
+        <label for="Nombre">武器名字：</label>
+        <input type="text" id="Nombre" required>
+        <label for="free">费用：</label>
+        <input type="text" id="free" required>
+        <label for="fodder">弹药：</label>
+        <input type="text" id="fodder" required>
+        <label for="hortation">击杀奖励:</label>
+        <input type="text" id="hortation" required>
+        <label for="hurt">伤害值：</label>
+        <input type="text" id="hurt" required>
+        <label for="speed">开火速率：</label>
+        <input type="text" id="speed" required>
+        <label for="photos">请选择你喜欢的枪支图片：</label>
+        <input type="file" id="photos" required>
+        <img id="img" src="">
+        <button id="close">保存武器</button>
+    </div>
+    <div class="add w1000 mar box" id="xx">
+        <label for="weaponlist1">修改武器类别：</label><br>
+        <p id="flasetwo">×</p>
+        <select id="weaponlist1">
+            <option value="0">手枪</option>
+            <option value="1">步枪</option>
+            <option value="2">微型冲锋枪</option>
+            <option value="3">重武器</option>
+            <option value="4">近身武器</option>
+        </select><br>
+        <label for="Nombre1">修改武器名字：</label>
+        <input type="text" id="Nombre1" required>
+        <label for="free1">修改费用：</label>
+        <input type="text" id="free1" required>
+        <label for="fodder1">修改弹药：</label>
+        <input type="text" id="fodder1" required>
+        <label for="hortation1">修改击杀奖励:</label>
+        <input type="text" id="hortation1" required>
+        <label for="hurt1">修改伤害值：</label>
+        <input type="text" id="hurt1" required>
+        <label for="speed1">修改开火速率：</label>
+        <input type="text" id="speed1" required>
+        <label for="photos1">修改你喜欢的枪支图片：</label>
+        <input type="file" id="photos1" required>
+        <img id="img2" src="">
+        <button id="close1">修改武器</button>
+    </div>
+
+</div>
+</body>
+</html>
+<script>
+
+</script>
